@@ -1,6 +1,6 @@
 {
-    "name": "choconotes",
-    "short_name": "choconotes",
+    "name": "choco_notes",
+    "short_name": "choco_notes",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

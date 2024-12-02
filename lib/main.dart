@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:choconotes/screens/note_app.dart';
+import 'package:choco_notes/screens/note_app.dart';
 
 void main() async {
   await GetStorage.init();

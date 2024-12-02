@@ -20,13 +20,13 @@
       # Runs when a workspace is first created with this `dev.nix` file
       onCreate = {
         build-flutter = ''
-          cd /home/user/choconotes/android
+          cd /home/user/choco_notes/android
 
           ./gradlew \
             --parallel \
             -Pverbose=true \
             -Ptarget-platform=android-x86 \
-            -Ptarget=/home/user/choconotes/lib/main.dart \
+            -Ptarget=/home/user/choco_notes/lib/main.dart \
             -Pbase-application-name=android.app.Application \
             -Pdart-defines=RkxVVFRFUl9XRUJfQ0FOVkFTS0lUX1VSTD1odHRwczovL3d3dy5nc3RhdGljLmNvbS9mbHV0dGVyLWNhbnZhc2tpdC85NzU1MDkwN2I3MGY0ZjNiMzI4YjZjMTYwMGRmMjFmYWMxYTE4ODlhLw== \
             -Pdart-obfuscation=false \
@@ -41,7 +41,7 @@
           # flutter build web --profile --dart-define=Dart2jsOptimization=O0
         '';
       };
-      
+
       # To run something each time the workspace is (re)started, use the `onStart` hook
     };
     # Enable previews and customize configuration

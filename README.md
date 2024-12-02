@@ -1,4 +1,4 @@
-# choconotes
+# choco_notes
 
 A new Flutter project.
 

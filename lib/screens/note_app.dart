@@ -1,13 +1,12 @@
 import 'dart:io';
 
-import 'package:choconotes/widgets/search_bar.dart';
+import 'package:choco_notes/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:choconotes/controllers/bg_image_controller.dart';
-import 'package:choconotes/controllers/note_controller.dart';
-import 'package:choconotes/screens/note_editor.dart';
-import 'package:choconotes/styles/linear_gradient.dart';
-import 'package:choconotes/widgets/note_tiles.dart';
+import 'package:choco_notes/controllers/bg_image_controller.dart';
+import 'package:choco_notes/controllers/note_controller.dart';
+import 'package:choco_notes/screens/note_editor.dart';
+import 'package:choco_notes/widgets/note_tiles.dart';
 
 class NoteApp extends StatelessWidget {
   final BackgroundImageController bgcontroller =
@@ -20,9 +19,7 @@ class NoteApp extends StatelessWidget {
     final NoteController controller = Get.put(NoteController());
 
     return Container(
-        decoration: BoxDecoration(
-          gradient: gradient,
-        ),
+        decoration: const BoxDecoration(color: Colors.black),
         child: Obx(() {
           return Container(
             decoration: BoxDecoration(
@@ -35,7 +32,7 @@ class NoteApp extends StatelessWidget {
                           : FileImage(File(bgcontroller
                               .backgroundImagePath.value)), // Picked image
                       fit: BoxFit.cover,
-                      opacity: 0.7,
+                      opacity: 0.9,
                     )
                   : null,
             ),
@@ -90,7 +87,7 @@ class NoteApp extends StatelessWidget {
                 ),
               ),
               body: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(12.0),
                 child: Column(
                   children: [
                     const AppSearchBar(),
@@ -131,19 +128,23 @@ class NoteApp extends StatelessWidget {
                 ),
               ),
               floatingActionButton: FloatingActionButton(
-                backgroundColor: Colors.white.withOpacity(0.5),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                      12.0), // Adjust the radius as needed
-                  side: const BorderSide(
-                    color: Colors.white, // Border color
-                    width: 1.0, // Border width
+                  backgroundColor: Colors.white.withOpacity(0.5),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        12.0), // Adjust the radius as needed
+                    side: const BorderSide(
+                      color: Colors.white, // Border color
+                      width: 1.0, // Border width
+                    ),
                   ),
-                ),
-                elevation: 0,
-                onPressed: () => Get.to(() => NoteEditor()),
-                child: const Icon(Icons.add),
-              ),
+                  elevation: 0,
+                  onPressed: () => Get.to(() => NoteEditor()),
+                  child: Obx(() {
+                    return Icon(
+                      Icons.add,
+                      color: controller.getTextColor(),
+                    );
+                  })),
             ),
           );
         }));

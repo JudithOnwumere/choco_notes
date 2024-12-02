@@ -1,11 +1,12 @@
 import 'dart:ui';
 
-import 'package:choconotes/styles/app_img_path.dart';
-import 'package:choconotes/styles/app_strings.dart';
-import 'package:choconotes/styles/app_text_styles.dart';
+import 'package:choco_notes/styles/app_img_path.dart';
+import 'package:choco_notes/styles/app_strings.dart';
+import 'package:choco_notes/styles/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:share_plus/share_plus.dart';
 
 class NoteController extends GetxController {
   final storage = GetStorage();
@@ -106,6 +107,20 @@ class NoteController extends GetxController {
     isDark.value = !isDark.value;
     storage.write('isDark', isDark.value);
   }
+
+  // Share notes
+  void shareNote(String title, String content) {
+  if (title.isNotEmpty || content.isNotEmpty) {
+    Share.share('Title: $title\n\n$content');
+  } else {
+    Get.snackbar(
+      'Empty Note',
+      'Cannot share an empty note.',
+      snackPosition: SnackPosition.BOTTOM,
+    );
+  }
+}
+
 
   // Function to show a dialog
   void confirmDeleteDialog(BuildContext context, int index) {

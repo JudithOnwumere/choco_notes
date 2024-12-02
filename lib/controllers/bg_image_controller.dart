@@ -1,12 +1,13 @@
 import 'dart:ui';
 
-import 'package:choconotes/styles/app_colours.dart';
-import 'package:choconotes/styles/app_text_styles.dart';
+import 'package:choco_notes/styles/app_colours.dart';
+import 'package:choco_notes/styles/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:choconotes/styles/app_strings.dart';
+import 'package:choco_notes/styles/app_strings.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class BackgroundImageController extends GetxController {
   final storage = GetStorage(); // GetStorage instance for persistence
@@ -22,14 +23,38 @@ class BackgroundImageController extends GetxController {
   // Pick an image from the gallery
   Future<void> pickImageFromGallery() async {
     try {
-      final ImagePicker picker = ImagePicker();
-      final XFile? pickedFile =
-          await picker.pickImage(source: ImageSource.gallery);
+      // Request or check permission
+      final permissionStatus = await Permission.photos.request();
 
-      if (pickedFile != null && pickedFile.path.isNotEmpty) {
-        backgroundImagePath.value = pickedFile.path;
-        saveBackgroundImage(
-            pickedFile.path); // Save the picked image to storage
+      if (permissionStatus.isGranted) {
+        // Permission granted, pick the image
+        final ImagePicker picker = ImagePicker();
+        final XFile? pickedFile =
+            await picker.pickImage(source: ImageSource.gallery);
+
+        if (pickedFile != null && pickedFile.path.isNotEmpty) {
+          // Assuming backgroundImagePath is an RxString
+          backgroundImagePath.value = pickedFile.path;
+          saveBackgroundImage(
+            pickedFile.path,
+          ); // Save the picked image to storage
+        }
+      } else if (permissionStatus.isDenied) {
+        // Permission denied, notify the user
+        Get.snackbar('Permission Denied',
+            'Gallery access is required to pick an image.');
+      } else if (permissionStatus.isPermanentlyDenied) {
+        // Permission permanently denied, suggest opening app settings
+        Get.snackbar(
+          'Permission Required',
+          'Please enable gallery access in app settings to pick an image.',
+          mainButton: TextButton(
+            onPressed: () {
+              openAppSettings();
+            },
+            child: const Text('Open Settings'),
+          ),
+        );
       }
     } catch (e) {
       // Handle any errors gracefully

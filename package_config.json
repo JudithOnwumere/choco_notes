@@ -362,7 +362,7 @@
       "languageVersion": "3.3"
     },
     {
-      "name": "choconotes",
+      "name": "choco_notes",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "3.5"

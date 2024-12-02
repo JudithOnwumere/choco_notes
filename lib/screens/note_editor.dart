@@ -1,12 +1,12 @@
 import 'dart:io';
+import 'dart:ui';
 
-import 'package:choconotes/styles/app_strings.dart';
-import 'package:choconotes/styles/app_text_styles.dart';
+import 'package:choco_notes/styles/app_strings.dart';
+import 'package:choco_notes/styles/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:choconotes/controllers/bg_image_controller.dart';
-import 'package:choconotes/controllers/note_controller.dart';
-import 'package:choconotes/styles/linear_gradient.dart';
+import 'package:choco_notes/controllers/bg_image_controller.dart';
+import 'package:choco_notes/controllers/note_controller.dart';
 
 class NoteEditor extends StatelessWidget {
   final BackgroundImageController bgcontroller =
@@ -25,9 +25,7 @@ class NoteEditor extends StatelessWidget {
         text: index != null ? controller.notes[index!]['content'] : '');
 
     return Container(
-        decoration: BoxDecoration(
-          gradient: gradient,
-        ),
+        color: Colors.black,
         child: Obx(() {
           return Container(
             decoration: BoxDecoration(
@@ -40,7 +38,7 @@ class NoteEditor extends StatelessWidget {
                           : FileImage(File(bgcontroller
                               .backgroundImagePath.value)), // Picked image
                       fit: BoxFit.cover,
-                      opacity: 0.5,
+                      opacity: 0.9,
                     )
                   : null,
             ),
@@ -59,76 +57,95 @@ class NoteEditor extends StatelessWidget {
                 }
                 return true;
               },
-              child: Scaffold(
-                backgroundColor: Colors.transparent,
-                appBar: AppBar(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                child: Scaffold(
+                  resizeToAvoidBottomInset: false,
                   backgroundColor: Colors.transparent,
-                  centerTitle: true,
-                  title: Obx(() {
-                    return controller.logoMode();
-                  }),
-                  leading: Obx(() {
-                    return IconButton(
-                        onPressed: () {
-                          final title = titleController.text.trim();
-                          final content = contentController.text.trim();
+                  appBar: AppBar(
+                    backgroundColor: Colors.transparent,
+                    centerTitle: true,
+                    title: Obx(() {
+                      return controller.logoMode();
+                    }),
+                    actions: [
+                      Obx(() {
+                        return IconButton(
+                            onPressed: () {
+                              final title = titleController.text.trim();
+                              final content = contentController.text.trim();
+                              controller.shareNote(title, content);
+                            },
+                            icon: Icon(
+                              Icons.share,
+                              size: 26,
+                              color: controller.getTextColor(),
+                            ));
+                      }),
+                    ],
+                    leading: Obx(() {
+                      return IconButton(
+                          onPressed: () {
+                            final title = titleController.text.trim();
+                            final content = contentController.text.trim();
 
-                          if (title.isNotEmpty && content.isNotEmpty) {
-                            if (index == null) {
-                              controller.addNote(title, content);
+                            if (title.isNotEmpty && content.isNotEmpty) {
+                              if (index == null) {
+                                controller.addNote(title, content);
+                              } else {
+                                controller.updateNote(index!, title, content);
+                              }
+                              Get.back();
                             } else {
-                              controller.updateNote(index!, title, content);
+                              Get.back();
                             }
-                            Get.back();
-                          } else {
-                            Get.back();
-                          }
-                        },
-                        icon: Icon(
-                          Icons.arrow_back,
-                          size: 28,
-                          color: controller.getTextColor(),
-                        ));
-                  }),
-                ),
-                body: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Column(
-                    children: [
-                      TextField(
-                        controller: titleController,
-                        style: AppTextStyles.addnoteTitle.copyWith(
-                          color: controller.getTextColor(),
-                        ),
-                        decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 12.0),
-                          hintText: AppStrings.addNoteTitle,
-                          hintStyle: AppTextStyles.addnoteTitle,
-                          border:
-                              OutlineInputBorder(borderSide: BorderSide.none),
-                        ),
-                      ),
-                      Expanded(
-                        child: TextField(
-                          controller: contentController,
-                          textAlignVertical: TextAlignVertical.top,
-                          style: AppTextStyles.addnoteContent.copyWith(
+                          },
+                          icon: Icon(
+                            Icons.arrow_back,
+                            size: 28,
+                            color: controller.getTextColor(),
+                          ));
+                    }),
+                  ),
+                  body: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Column(
+                      children: [
+                        TextField(
+                          controller: titleController,
+                          style: AppTextStyles.addnoteTitle.copyWith(
                             color: controller.getTextColor(),
                           ),
-                          maxLines: null,
-                          expands: true,
                           decoration: const InputDecoration(
                             contentPadding: EdgeInsets.symmetric(
                                 vertical: 8.0, horizontal: 12.0),
-                            hintText: AppStrings.addNoteBody,
-                            hintStyle: AppTextStyles.addnoteContent,
+                            hintText: AppStrings.addNoteTitle,
+                            hintStyle: AppTextStyles.addnoteTitle,
                             border:
                                 OutlineInputBorder(borderSide: BorderSide.none),
                           ),
                         ),
-                      ),
-                    ],
+                        Expanded(
+                          child: TextField(
+                            controller: contentController,
+                            textAlignVertical: TextAlignVertical.top,
+                            style: AppTextStyles.addnoteContent.copyWith(
+                              color: controller.getTextColor(),
+                            ),
+                            maxLines: null,
+                            expands: true,
+                            decoration: const InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: 8.0, horizontal: 12.0),
+                              hintText: AppStrings.addNoteBody,
+                              hintStyle: AppTextStyles.addnoteContent,
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide.none),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
