@@ -113,6 +113,9 @@ class NoteEditor extends StatelessWidget {
                       children: [
                         TextField(
                           controller: titleController,
+                          autofocus: true,
+                          maxLines: 3,
+                          minLines: 1,
                           style: AppTextStyles.addnoteTitle.copyWith(
                             color: controller.getTextColor(),
                           ),
