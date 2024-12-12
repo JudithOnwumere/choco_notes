@@ -77,5 +77,6 @@ class NoteTile extends StatelessWidget {
         ),
       ),
     );
+    // Just Because hehe
   }
 }
